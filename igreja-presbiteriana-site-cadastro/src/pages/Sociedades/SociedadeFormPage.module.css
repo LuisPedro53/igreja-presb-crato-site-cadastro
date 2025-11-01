@@ -1,0 +1,80 @@
+.container {
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.backButton {
+  margin-right: 12px;
+}
+
+.titleSection {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  margin: 0;
+  font-size: 20px;
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--muted-color, #666);
+  font-size: 13px;
+}
+
+.form {
+  background: var(--card-bg, #fff);
+  padding: 16px;
+  border-radius: var(--radius-md, 10px);
+  border: 1px solid var(--border-color, #eee);
+}
+
+.formGroup {
+  margin-bottom: 12px;
+}
+
+.formRow {
+  display: flex;
+  gap: 12px;
+}
+
+.formGroupInline {
+  flex: 1;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.spinnerSmall {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 3px solid var(--muted-color, #eee);
+  border-top-color: var(--primary-color, #333);
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

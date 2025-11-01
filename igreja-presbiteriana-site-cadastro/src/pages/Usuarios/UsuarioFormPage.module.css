@@ -1,0 +1,42 @@
+.container {
+  padding: 20px;
+}
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.backButton {
+  margin-right: 8px;
+}
+.form {
+  background: var(--card-bg, #fff);
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color, #eee);
+}
+.formGroup {
+  margin-bottom: 12px;
+}
+.formRow {
+  display: flex;
+  gap: 12px;
+}
+.formGroupInline {
+  flex: 1;
+}
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}
+.title {
+  margin: 0;
+}

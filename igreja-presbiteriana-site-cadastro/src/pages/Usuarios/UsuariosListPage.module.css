@@ -1,0 +1,51 @@
+.container {
+  padding: 20px;
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.headerActions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.searchInput {
+  width: 240px;
+}
+.newButton {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.table {
+  border-top: 1px solid var(--border-color, #eee);
+}
+.rowHeader,
+.row {
+  display: grid;
+  grid-template-columns: 2fr 2fr 2fr 1fr 1fr;
+  gap: 12px;
+  padding: 10px 0;
+  align-items: center;
+}
+.rowHeader {
+  font-weight: 600;
+  color: var(--muted-color, #666);
+}
+.row {
+  border-bottom: 1px solid var(--border-color, #f5f5f5);
+}
+.actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+.loading,
+.empty {
+  padding: 20px;
+  text-align: center;
+}

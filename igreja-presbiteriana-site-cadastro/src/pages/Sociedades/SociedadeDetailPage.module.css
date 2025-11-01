@@ -1,0 +1,65 @@
+.container {
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.backButton {
+  margin-right: 8px;
+}
+
+.title {
+  margin: 0;
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--muted-color, #666);
+}
+
+.content {
+  background: var(--card-bg, #fff);
+  padding: 12px;
+  border-radius: var(--radius-md, 10px);
+}
+
+.addRow {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  margin-bottom: 12px;
+}
+
+.addButton {
+  height: 40px;
+}
+
+.membersList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.memberItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid var(--border-color, #eee);
+  border-radius: var(--radius-sm, 8px);
+}
+
+.memberInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.memberActions {
+  display: flex;
+  gap: 8px;
+}

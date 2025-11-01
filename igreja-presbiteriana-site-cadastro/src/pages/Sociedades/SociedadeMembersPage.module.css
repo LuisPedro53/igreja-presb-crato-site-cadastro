@@ -1,0 +1,18 @@
+/* Estilos simples para página de membros da sociedade */
+.container {
+  padding: 16px;
+}
+.tableWrap {
+  margin-top: 16px;
+  overflow-x: auto;
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.table th,
+.table td {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
