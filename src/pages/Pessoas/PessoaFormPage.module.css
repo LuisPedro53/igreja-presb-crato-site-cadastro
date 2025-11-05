@@ -225,6 +225,73 @@
   color: var(--color-gray-700);
 }
 
+/* Estilos para o seletor de cargo ao lado da sociedade */
+.sociedadeCargo {
+  margin-left: auto; /* empurra o bloco de cargo para a direita */
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.smallLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-600);
+  font-weight: var(--font-weight-medium);
+  margin-right: var(--spacing-xs);
+  white-space: nowrap;
+}
+
+.sociedadeCargo select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: var(--color-white);
+  color: var(--color-gray-900);
+  border: 1px solid var(--color-gray-300);
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: var(--font-size-sm);
+  min-width: 220px;
+  box-shadow: 0 6px 18px rgba(17, 24, 39, 0.06);
+  text-align: left;
+  padding-right: 36px; /* espaço para ícone */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='10' viewBox='0 0 14 10'%3E%3Cpath fill='%23343A40' d='M7 10L0 0h14z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+.sociedadeCargo select:focus {
+  outline: none;
+  box-shadow: 0 6px 24px rgba(17, 24, 39, 0.08),
+    0 0 0 3px rgba(68, 145, 111, 0.06);
+  border-color: var(--color-primary-dark);
+}
+
+/* Responsividade: empilhar label e select em telas menores */
+@media (max-width: 768px) {
+  .sociedadeCargo {
+    margin-left: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+  }
+
+  .sociedadeCargo select {
+    min-width: 100%;
+    padding-right: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sociedadeCargo {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .sociedadeCargo select {
+    min-width: 100%;
+  }
+}
+
 .emptySociedades {
   text-align: center;
   padding: var(--spacing-lg);

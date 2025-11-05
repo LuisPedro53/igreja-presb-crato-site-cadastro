@@ -34,7 +34,9 @@ export const PessoaFormPage: React.FC = () => {
   const [tiposPessoa, setTiposPessoa] = useState<TipoPessoa[]>([]);
   const [sociedades, setSociedades] = useState<Sociedades[]>([]);
   const [tiposCargo, setTiposCargo] = useState<any[]>([]);
-  const [selectedCargo, setSelectedCargo] = useState<number | null>(null);
+  const [selectedCargoBySociedade, setSelectedCargoBySociedade] = useState<
+    Record<number, number | null>
+  >({});
   const [selectedSociedades, setSelectedSociedades] = useState<number[]>([]);
   const [fotoFile, setFotoFile] = useState<File | null>(null);
   const [fotoUrl, setFotoUrl] = useState<string | null>(null);
@@ -93,13 +95,12 @@ export const PessoaFormPage: React.FC = () => {
           // Carregar sociedades da pessoa
           const socsPessoa = await getPessoaSociedades(parseInt(id));
           setSelectedSociedades(socsPessoa.map((s: any) => s.cdSociedade));
-          // pré-selecionar cargo se existir (usa o primeiro vínculo)
-          if (socsPessoa.length > 0) {
-            const first = socsPessoa[0];
-            if (first.cdpessoaSociedade) {
-              setSelectedCargo(first.cdpessoatiposociedade ?? null);
-            }
-          }
+          // preencher cargos por sociedade a partir dos vínculos retornados
+          const cargoMap: Record<number, number | null> = {};
+          socsPessoa.forEach((s: any) => {
+            cargoMap[s.cdSociedade] = s.cdpessoatiposociedade ?? null;
+          });
+          setSelectedCargoBySociedade(cargoMap);
         }
       }
     } catch (error: any) {
@@ -159,21 +160,21 @@ export const PessoaFormPage: React.FC = () => {
             await addPessoaToSociedade({
               cdpessoa: pessoaId,
               cdSociedade: socId,
+              cdpessoatiposociedade: selectedCargoBySociedade[socId] ?? null,
             });
           }
         }
 
         // Atualizar cargo (cdpessoatiposociedade) em associações existentes para refletir seleção
         for (const soc of await getPessoaSociedades(parseInt(id))) {
-          if (
-            selectedCargo !== null &&
-            soc.cdpessoatiposociedade !== selectedCargo
-          ) {
-            // atualizar via endpoint PATCH
+          const desiredCargo =
+            selectedCargoBySociedade[soc.cdSociedade] ?? null;
+          // atualizar apenas se for diferente (inclusive null)
+          if (soc.cdpessoatiposociedade !== desiredCargo) {
             await fetch(`/api/pessoassociedade/${soc.cdpessoaSociedade}`, {
               method: 'PATCH',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ cdpessoatiposociedade: selectedCargo }),
+              body: JSON.stringify({ cdpessoatiposociedade: desiredCargo }),
             });
           }
         }
@@ -183,8 +184,7 @@ export const PessoaFormPage: React.FC = () => {
           await addPessoaToSociedade({
             cdpessoa: pessoaId,
             cdSociedade: socId,
-            cdpessoatiposociedade:
-              selectedCargo !== null ? selectedCargo : null,
+            cdpessoatiposociedade: selectedCargoBySociedade[socId] ?? null,
           });
         }
       }
@@ -198,11 +198,25 @@ export const PessoaFormPage: React.FC = () => {
   };
 
   const handleSociedadeToggle = (socId: number) => {
-    setSelectedSociedades((prev) =>
-      prev.includes(socId)
-        ? prev.filter((id) => id !== socId)
-        : [...prev, socId]
-    );
+    setSelectedSociedades((prev) => {
+      if (prev.includes(socId)) {
+        // remover sociedade e limpar cargo associado
+        setSelectedCargoBySociedade((prevMap) => {
+          const next = { ...prevMap };
+          delete next[socId];
+          return next;
+        });
+        return prev.filter((id) => id !== socId);
+      }
+      return [...prev, socId];
+    });
+  };
+
+  const handleCargoChangeForSociedade = (
+    socId: number,
+    cargoId: number | null
+  ) => {
+    setSelectedCargoBySociedade((prev) => ({ ...prev, [socId]: cargoId }));
   };
 
   if (loading && isEdit) {
@@ -263,25 +277,7 @@ export const PessoaFormPage: React.FC = () => {
               />
             </div>
 
-            <div className={styles.formGroup}>
-              <Select
-                label='Cargo'
-                placeholder='Selecione o cargo (opcional)'
-                options={[
-                  { value: '', label: 'Nenhum' },
-                  ...tiposCargo.map((t) => ({
-                    value: t.cdpessoatiposociedade,
-                    label: t.nmcargo,
-                  })),
-                ]}
-                value={selectedCargo ?? ''}
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                  setSelectedCargo(
-                    e.target.value ? Number(e.target.value) : null
-                  )
-                }
-              />
-            </div>
+            {/* Nota: cargos agora são selecionados por sociedade na coluna direita */}
 
             <div className={styles.formRow}>
               <div className={styles.formGroup}>
@@ -371,9 +367,36 @@ export const PessoaFormPage: React.FC = () => {
                         checked={selectedSociedades.includes(soc.cdSociedade)}
                         onChange={() => handleSociedadeToggle(soc.cdSociedade)}
                       />
-                      <span>
-                        {soc.nmSociedade} {soc.sigla && `(${soc.sigla})`}
+                      <span title={soc.nmSociedade}>
+                        {soc.sigla ? soc.sigla : soc.nmSociedade}
                       </span>
+                      {selectedSociedades.includes(soc.cdSociedade) && (
+                        <div className={styles.sociedadeCargo}>
+                          <label className={styles.smallLabel}>Cargo</label>
+                          <select
+                            value={
+                              selectedCargoBySociedade[soc.cdSociedade] ?? ''
+                            }
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              handleCargoChangeForSociedade(
+                                soc.cdSociedade,
+                                val ? Number(val) : null
+                              );
+                            }}
+                          >
+                            <option value=''>Nenhum</option>
+                            {tiposCargo.map((t: any) => (
+                              <option
+                                key={t.cdpessoatiposociedade}
+                                value={t.cdpessoatiposociedade}
+                              >
+                                {t.nmcargo}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      )}
                     </label>
                   ))
                 )}
